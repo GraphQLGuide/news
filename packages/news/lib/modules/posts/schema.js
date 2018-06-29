@@ -4,21 +4,12 @@ Posts schema
 
 */
 
-import Users from 'meteor/vulcan:users'
-import {
-  Utils,
-  getSetting,
-  registerSetting,
-  getCollection
-} from 'meteor/vulcan:core'
-import moment from 'moment'
-import marked from 'marked'
+import Users from 'meteor/vulcan:users';
+import { Utils, getSetting, registerSetting, getCollection } from 'meteor/vulcan:core';
+import moment from 'moment';
+import marked from 'marked';
 
-registerSetting(
-  'forum.postExcerptLength',
-  30,
-  'Length of posts excerpts in words'
-)
+registerSetting('forum.postExcerptLength', 30, 'Length of posts excerpts in words');
 
 /**
  * @summary Posts config namespace
@@ -29,7 +20,7 @@ const formGroups = {
     name: 'admin',
     order: 2
   }
-}
+};
 
 /**
  * @summary Posts schema
@@ -42,7 +33,7 @@ const schema = {
   _id: {
     type: String,
     optional: true,
-    viewableBy: ['guests']
+    viewableBy: ['guests'],
   },
   /**
     Timetstamp of post creation
@@ -52,7 +43,7 @@ const schema = {
     optional: true,
     viewableBy: ['admins'],
     onInsert: () => {
-      return new Date()
+      return new Date();
     }
   },
   /**
@@ -68,12 +59,14 @@ const schema = {
     group: formGroups.admin,
     onInsert: (post, currentUser) => {
       // Set the post's postedAt if it's going to be approved
-      if (
-        !post.postedAt &&
-        getCollection('Posts').getDefaultStatus(currentUser) ===
-          getCollection('Posts').config.STATUS_APPROVED
-      ) {
-        return new Date()
+      if (!post.postedAt && getCollection('Posts').getDefaultStatus(currentUser) === getCollection('Posts').config.STATUS_APPROVED) {
+        return new Date();
+      }
+    },
+    onEdit: (modifier, post) => {
+      // Set the post's postedAt if it's going to be approved
+      if (!post.postedAt && modifier.$set.status === getCollection('Posts').config.STATUS_APPROVED) {
+        return new Date();
       }
     }
   },
@@ -90,14 +83,12 @@ const schema = {
     control: 'url',
     order: 10,
     searchable: true,
-    form: {
-      query: `
-        SiteData{
-          logoUrl
-          title
-        }
-      `
-    }
+    query: `
+      SiteData{
+        logoUrl
+        title
+      }
+    `,
   },
   /**
     Title
@@ -120,12 +111,12 @@ const schema = {
     type: String,
     optional: true,
     viewableBy: ['guests'],
-    onInsert: post => {
-      return Utils.slugify(post.title)
+    onInsert: (post) => {
+      return Utils.slugify(post.title);
     },
     onEdit: (modifier, post) => {
       if (modifier.$set.title) {
-        return Utils.slugify(modifier.$set.title)
+        return Utils.slugify(modifier.$set.title);
       }
     }
   },
@@ -149,14 +140,14 @@ const schema = {
     type: String,
     optional: true,
     viewableBy: ['guests'],
-    onInsert: post => {
+    onInsert: (post) => {
       if (post.body) {
-        return Utils.sanitize(marked(post.body))
+        return Utils.sanitize(marked(post.body));
       }
     },
     onEdit: (modifier, post) => {
       if (modifier.$set.body) {
-        return Utils.sanitize(marked(modifier.$set.body))
+        return Utils.sanitize(marked(modifier.$set.body));
       }
     }
   },
@@ -168,20 +159,17 @@ const schema = {
     optional: true,
     viewableBy: ['guests'],
     searchable: true,
-    onInsert: post => {
+    onInsert: (post) => {
       if (post.body) {
         // excerpt length is configurable via the settings (30 words by default, ~255 characters)
-        const excerptLength = getSetting('forum.postExcerptLength', 30)
-        return Utils.trimHTML(Utils.sanitize(marked(post.body)), excerptLength)
+        const excerptLength = getSetting('forum.postExcerptLength', 30); 
+        return Utils.trimHTML(Utils.sanitize(marked(post.body)), excerptLength);
       }
     },
     onEdit: (modifier, post) => {
       if (modifier.$set.body) {
-        const excerptLength = getSetting('forum.postExcerptLength', 30)
-        return Utils.trimHTML(
-          Utils.sanitize(marked(modifier.$set.body)),
-          excerptLength
-        )
+        const excerptLength = getSetting('forum.postExcerptLength', 30); 
+        return Utils.trimHTML(Utils.sanitize(marked(modifier.$set.body)), excerptLength);
       }
     }
   },
@@ -200,7 +188,7 @@ const schema = {
   lastCommentedAt: {
     type: Date,
     optional: true,
-    viewableBy: ['guests']
+    viewableBy: ['guests'],
   },
   /**
     Count of how many times the post's link was clicked
@@ -223,18 +211,16 @@ const schema = {
     control: 'select',
     onInsert: (document, currentUser) => {
       if (!document.status) {
-        return getCollection('Posts').getDefaultStatus(currentUser)
+        return getCollection('Posts').getDefaultStatus(currentUser);
       }
     },
     onEdit: (modifier, document, currentUser) => {
       // if for some reason post status has been removed, give it default status
       if (modifier.$unset && modifier.$unset.status) {
-        return getCollection('Posts').getDefaultStatus(currentUser)
+        return getCollection('Posts').getDefaultStatus(currentUser);
       }
     },
-    form: {
-      options: () => getCollection('Posts').statuses
-    },
+    options: () => getCollection('Posts').statuses,
     group: formGroups.admin
   },
   /**
@@ -244,25 +230,25 @@ const schema = {
     type: Boolean,
     optional: true,
     viewableBy: ['guests'],
-    onInsert: post => {
+    onInsert: (post) => {
       // Set the post's isFuture to true if necessary
       if (post.postedAt) {
-        const postTime = new Date(post.postedAt).getTime()
-        const currentTime = new Date().getTime() + 1000
-        return postTime > currentTime // round up to the second
+        const postTime = new Date(post.postedAt).getTime();
+        const currentTime = new Date().getTime() + 1000;
+        return postTime > currentTime; // round up to the second
       }
     },
     onEdit: (modifier, post) => {
       // Set the post's isFuture to true if necessary
       if (modifier.$set.postedAt) {
-        const postTime = new Date(modifier.$set.postedAt).getTime()
-        const currentTime = new Date().getTime() + 1000
+        const postTime = new Date(modifier.$set.postedAt).getTime();
+        const currentTime = new Date().getTime() + 1000;
         if (postTime > currentTime) {
           // if a post's postedAt date is in the future, set isFuture to true
-          return true
+          return true;
         } else if (post.isFuture) {
           // else if a post has isFuture to true but its date is in the past, set isFuture to false
-          return false
+          return false;
         }
       }
     }
@@ -279,14 +265,14 @@ const schema = {
     editableBy: ['admins'],
     control: 'checkbox',
     group: formGroups.admin,
-    onInsert: post => {
-      if (!post.sticky) {
-        return false
+    onInsert: (post) => {
+      if(!post.sticky) {
+        return false;
       }
     },
     onEdit: (modifier, post) => {
       if (!modifier.$set.sticky) {
-        return false
+        return false;
       }
     }
   },
@@ -296,17 +282,17 @@ const schema = {
   userIP: {
     type: String,
     optional: true,
-    viewableBy: ['admins']
+    viewableBy: ['admins'],
   },
   userAgent: {
     type: String,
     optional: true,
-    viewableBy: ['admins']
+    viewableBy: ['admins'],
   },
   referrer: {
     type: String,
     optional: true,
-    viewableBy: ['admins']
+    viewableBy: ['admins'],
   },
   /**
     The post author's name
@@ -336,16 +322,12 @@ const schema = {
       fieldName: 'user',
       type: 'User',
       resolver: async (post, args, context) => {
-        if (!post.userId) return null
-        const user = await context.Users.loader.load(post.userId)
-        return context.Users.restrictViewableFields(
-          context.currentUser,
-          context.Users,
-          user
-        )
+        if (!post.userId) return null;
+        const user = await context.Users.loader.load(post.userId);
+        return context.Users.restrictViewableFields(context.currentUser, context.Users, user);
       },
       addOriginalField: true
-    }
+    },
   },
 
   /**
@@ -354,7 +336,7 @@ const schema = {
   scheduledAt: {
     type: Date,
     optional: true,
-    viewableBy: ['admins']
+    viewableBy: ['admins'],
   },
 
   // GraphQL-only fields
@@ -366,8 +348,8 @@ const schema = {
     resolveAs: {
       type: 'String',
       resolver: (post, args, context) => {
-        return Utils.getDomain(post.url)
-      }
+        return Utils.getDomain(post.url);
+      },
     }
   },
 
@@ -378,8 +360,8 @@ const schema = {
     resolveAs: {
       type: 'String',
       resolver: (post, args, { Posts }) => {
-        return Posts.getPageUrl(post, true)
-      }
+        return Posts.getPageUrl(post, true);
+      },
     }
   },
 
@@ -390,10 +372,8 @@ const schema = {
     resolveAs: {
       type: 'String',
       resolver: (post, args, { Posts }) => {
-        return post.url
-          ? Utils.getOutgoingUrl(post.url)
-          : Posts.getPageUrl(post, true)
-      }
+        return post.url ? Utils.getOutgoingUrl(post.url) : Posts.getPageUrl(post, true);
+      },
     }
   },
 
@@ -404,7 +384,7 @@ const schema = {
     resolveAs: {
       type: 'String',
       resolver: (post, args, context) => {
-        return moment(post.postedAt).format('dddd, MMMM Do YYYY')
+        return moment(post.postedAt).format('dddd, MMMM Do YYYY');
       }
     }
   },
@@ -416,33 +396,27 @@ const schema = {
     resolveAs: {
       type: 'Int',
       resolver: (post, args, { Comments }) => {
-        const commentsCount = Comments.find({ postId: post._id }).count()
-        return commentsCount
-      }
+        const commentsCount = Comments.find({ postId: post._id }).count();
+        return commentsCount;
+      },
     }
   },
 
   comments: {
-    type: Array,
+    type: Object,
     optional: true,
     viewableBy: ['guests'],
     resolveAs: {
       arguments: 'limit: Int = 5',
       type: '[Comment]',
       resolver: (post, { limit }, { currentUser, Users, Comments }) => {
-        const comments = Comments.find({ postId: post._id }, { limit }).fetch()
+        const comments = Comments.find({ postId: post._id }, { limit }).fetch();
 
         // restrict documents fields
-        const viewableComments = _.filter(comments, comments =>
-          Comments.checkAccess(currentUser, comments)
-        )
-        const restrictedComments = Users.restrictViewableFields(
-          currentUser,
-          Comments,
-          viewableComments
-        )
+        const viewableComments = _.filter(comments, comments => Comments.checkAccess(currentUser, comments));
+        const restrictedComments = Users.restrictViewableFields(currentUser, Comments, viewableComments);
 
-        return restrictedComments
+        return restrictedComments;
       }
     }
   },
@@ -454,7 +428,7 @@ const schema = {
     resolveAs: {
       type: 'String',
       resolver: (post, args, { Posts }) => {
-        return Posts.getEmailShareUrl(post)
+        return Posts.getEmailShareUrl(post);
       }
     }
   },
@@ -466,7 +440,7 @@ const schema = {
     resolveAs: {
       type: 'String',
       resolver: (post, args, { Posts }) => {
-        return Posts.getTwitterShareUrl(post)
+        return Posts.getTwitterShareUrl(post);
       }
     }
   },
@@ -478,10 +452,11 @@ const schema = {
     resolveAs: {
       type: 'String',
       resolver: (post, args, { Posts }) => {
-        return Posts.getFacebookShareUrl(post)
+        return Posts.getFacebookShareUrl(post);
       }
     }
-  }
-}
+  },
 
-export default schema
+};
+
+export default schema;

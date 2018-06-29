@@ -1,7 +1,7 @@
 import { Components, registerComponent, withMessages } from 'meteor/vulcan:core'
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
-import { intlShape, FormattedMessage } from 'meteor/vulcan:i18n'
+import { FormattedMessage } from 'meteor/vulcan:i18n'
 import { Comments } from '../../modules/comments/index.js'
 import moment from 'moment'
 
@@ -52,12 +52,7 @@ class CommentsItem extends PureComponent {
   }
 
   removeSuccessCallback({ documentId }) {
-    const deleteDocumentSuccess = this.context.intl.formatMessage({
-      id: 'comments.delete_success'
-    })
-    this.props.flash(deleteDocumentSuccess, 'success')
-    // todo: handle events in async callback
-    // this.context.events.track("comment deleted", {_id: documentId});
+    this.props.flash({ id: 'comments.delete_success', type: 'success' })
   }
 
   renderComment() {
@@ -123,16 +118,21 @@ class CommentsItem extends PureComponent {
             <div className="comments-item-date">
               {moment(new Date(comment.postedAt)).fromNow()}
             </div>
-            <Components.ShowIf
-              check={Comments.options.mutations.edit.check}
-              document={this.props.comment}
-            >
+            <Components.UsersAvatar size="small" user={comment.user} />
+            <Components.UsersName user={comment.user} />
+            <div className="comments-item-date">
+              {moment(new Date(comment.postedAt)).fromNow()}
+            </div>
+            {Comments.options.mutations.edit.check(
+              this.props.currentUser,
+              this.props.comment
+            ) && (
               <div>
                 <a className="comment-edit" onClick={this.showEdit}>
                   <FormattedMessage id="comments.edit" />
                 </a>
               </div>
-            </Components.ShowIf>
+            )}
           </div>
           {this.state.showEdit ? this.renderEdit() : this.renderComment()}
         </div>
@@ -146,11 +146,6 @@ CommentsItem.propTypes = {
   comment: PropTypes.object.isRequired, // the current comment
   currentUser: PropTypes.object,
   flash: PropTypes.func
-}
-
-CommentsItem.contextTypes = {
-  events: PropTypes.object,
-  intl: intlShape
 }
 
 registerComponent('CommentsItem', CommentsItem, withMessages)

@@ -85,5 +85,8 @@ addStrings('en', {
   'categories.subscribed_categories': 'Categories subscribed to',
   'categories.delete_confirm': 'Delete category “{title}”?',
   'categories.delete_success': 'Category “{name}” deleted.',
-  'categories.invalid': 'Invalid category'
+  'categories.invalid': 'Invalid category',
+
+  'admin.categories': 'Categories (admin)',
+  'admin.users': 'Users (admin)'
 })

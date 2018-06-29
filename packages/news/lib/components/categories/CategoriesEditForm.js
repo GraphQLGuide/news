@@ -20,24 +20,12 @@ const CategoriesEditForm = (props, context) => {
         documentId={props.category._id}
         mutationFragment={getFragment('CategoriesList')}
         successCallback={category => {
-          props.closeModal()
-          props.flash(
-            context.intl.formatMessage(
-              { id: 'categories.edit_success' },
-              { name: category.name }
-            ),
-            'success'
-          )
+          props.closeModal();
+          props.flash({ id: 'categories.edit_success', properties: { name: category.name }, type: 'success'});
         }}
         removeSuccessCallback={({ documentId, documentTitle }) => {
-          props.closeModal()
-          props.flash(
-            context.intl.formatMessage(
-              { id: 'categories.delete_success' },
-              { name: documentTitle }
-            ),
-            'success'
-          )
+          props.closeModal();
+          props.flash({ id: 'categories.delete_success', properties: {name: documentTitle }, type: 'success'});
           // context.events.track("category deleted", {_id: documentId});
         }}
         showRemove={true}

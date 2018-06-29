@@ -9,7 +9,7 @@ import {
 import { Posts } from '../../modules/posts/index.js'
 import React from 'react'
 import PropTypes from 'prop-types'
-import { intlShape, FormattedMessage } from 'meteor/vulcan:i18n'
+import { FormattedMessage } from 'meteor/vulcan:i18n'
 import { withRouter } from 'react-router'
 
 const PostsNewForm = (props, context) => {
@@ -41,10 +41,7 @@ const PostsNewForm = (props, context) => {
             props.router.push({
               pathname: props.redirect || Posts.getPageUrl(post)
             })
-            props.flash(
-              context.intl.formatMessage({ id: 'posts.created_message' }),
-              'success'
-            )
+            props.flash({ id: 'posts.created_message', type: 'success' })
           }}
         />
       </div>
@@ -60,8 +57,7 @@ PostsNewForm.propTypes = {
 }
 
 PostsNewForm.contextTypes = {
-  closeCallback: PropTypes.func,
-  intl: intlShape
+  closeCallback: PropTypes.func
 }
 
 PostsNewForm.displayName = 'PostsNewForm'

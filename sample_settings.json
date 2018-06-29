@@ -3,9 +3,6 @@
     "title": "GraphQL News",
     "tagline": "HN for GraphQL",
 
-    "logoUrl": "http://placekitten.com/250/80",
-    "logoHeight": "80",
-    "logoWidth": "250",
     "faviconUrl": "/favicon.ico",
 
     "language": "en",
