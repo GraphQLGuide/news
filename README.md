@@ -1,18 +1,18 @@
 ### GraphQL News
 
-*HN for GraphQL*
+*Hacker News for GraphQL*
 
 [graphql.news](https://graphql.news)
 
-# Dev
+---
 
-[Vulcan docs](http://docs.vulcanjs.org)
+## Dev
 
-[staging.graphql.news](https://staging.graphql.news)
+- [staging.graphql.news](https://staging.graphql.news)
+- [Vulcan docs](http://docs.vulcanjs.org)
+- [Our CircleCI](https://circleci.com/gh/GraphQLGuide/news/)
 
-[Our CircleCI](https://circleci.com/gh/GraphQLGuide/news/)
-
-## Setup
+### Setup
 
 ```
 git clone git@github.com:GraphQLGuide/news.git
