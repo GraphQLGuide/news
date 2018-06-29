@@ -13,16 +13,18 @@ Package.onUse(function(api) {
     'fourseven:scss@4.5.0',
 
     // vulcan core
-    'vulcan:core@1.8.9',
+    'vulcan:core@1.11.0',
 
     // vulcan packages
-    'vulcan:voting@1.8.9',
-    'vulcan:accounts@1.8.9',
-    'vulcan:email@1.8.9',
-    'vulcan:forms@1.8.9',
-    'vulcan:newsletter@1.8.9',
-    'vulcan:events@1.8.9',
-    'vulcan:embed@1.8.9'
+    'vulcan:ui-bootstrap@1.11.0',
+    'vulcan:voting@1.11.0',
+    'vulcan:accounts@1.11.0',
+    'vulcan:email@1.11.0',
+    'vulcan:forms@1.11.0',
+    'vulcan:newsletter@1.11.0',
+    'vulcan:events@1.11.0',
+    'vulcan:embed@1.11.0',
+    'vulcan:admin@1.11.0'
   ])
 
   api.addAssets(
