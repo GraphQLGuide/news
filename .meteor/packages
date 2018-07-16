@@ -1,6 +1,6 @@
 # see http://docs.vulcanjs.org/packages
 
-vulcan:core@1.11.0
+vulcan:core
 
 ############ Language Packages ############
 
@@ -8,8 +8,9 @@ vulcan:i18n-en-us
 
 ############ Accounts Packages ############
 
-accounts-github
+accounts-github@1.4.1
 
 ############ Your Packages ############
 
 news
+underscore@1.0.10
