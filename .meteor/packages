@@ -1,6 +1,6 @@
 # see http://docs.vulcanjs.org/packages
 
-vulcan:core@1.8.9
+vulcan:core
 
 ############ Language Packages ############
 
@@ -8,8 +8,21 @@ vulcan:i18n-en-us
 
 ############ Accounts Packages ############
 
-accounts-github
+accounts-password@1.5.1
+# accounts-twitter
+# accounts-facebook
 
 ############ Your Packages ############
 
-news
+getting-started
+
+# example-simple
+# example-movies
+# example-instagram
+# example-forum
+# example-customization
+# example-permissions
+# example-membership
+# example-interfaces
+# example-reactions
+# example-forms
