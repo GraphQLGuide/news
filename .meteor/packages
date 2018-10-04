@@ -11,8 +11,10 @@ vulcan:i18n-en-us
 accounts-password@1.5.1
 # accounts-twitter
 # accounts-facebook
+accounts-github
 
 ############ Your Packages ############
 
 example-forum
 
+service-configuration

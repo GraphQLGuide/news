@@ -13,7 +13,7 @@ Package.onUse(function (api) {
 
     'promise',
     'fourseven:scss@4.5.0',
-
+    'service-configuration@1.0.11',
     // vulcan core
     'vulcan:core@1.12.8',
 

@@ -19,3 +19,4 @@ import './posts/index.js';
 
 import './api.js';
 import './rss.js';
+import './config.js';
