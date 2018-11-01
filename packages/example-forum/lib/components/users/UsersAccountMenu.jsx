@@ -1,25 +1,40 @@
-import { Components, registerComponent } from 'meteor/vulcan:core';
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { FormattedMessage } from 'meteor/vulcan:i18n';
-import { STATES } from 'meteor/vulcan:accounts';
+import { registerComponent } from 'meteor/vulcan:core'
+import React, { Component } from 'react'
+import { withApollo } from 'react-apollo';
+import { Accounts } from 'meteor/accounts-base'
 
-const UsersAccountMenu = ({ state }) => (
-  <Components.Dropdown
-    variant="default"
-    id="accounts-dropdown"
-    className="users-account-menu"
-    trigger={
-      <div className="dropdown-toggle-inner">
-        <Components.Icon name="user" />
-        <FormattedMessage id="users.sign_up_log_in" />
-      </div>
-    }
-    pullRight
-    menuContents={<Components.AccountsLoginForm formState={state ? STATES[state] : STATES.SIGN_UP} />}
-  />
-);
+class UsersAccountMenu extends Component {
+  login = () => {
+    Meteor.loginWithGithub(null, error => {
+      if (error) {
+        // eslint-disable-next-line no-console
+        console.log(error)
+        if (error instanceof Accounts.LoginCancelledError) {
+          // do nothing
+        } else {
+          const errorId = `accounts.error_${error.reason
+            .toLowerCase()
+            .replace(/ /g, '_')}`
+  
+          alert(errorId)
+        }
+        return
+      }
+  
+      this.props.client.resetStore()
+    })
+  
+  }
 
-UsersAccountMenu.displayName = 'UsersAccountMenu';
+  render() {
+    return (
+      <>
+        <button onClick={this.login}>Sign in</button>
+        <button onClick={this.login}>Sign up</button>
+      </>
+    )
+  }
 
-registerComponent({ name: 'UsersAccountMenu', component: UsersAccountMenu });
+}
+
+registerComponent({ name: 'UsersAccountMenu', component: withApollo(UsersAccountMenu) })
